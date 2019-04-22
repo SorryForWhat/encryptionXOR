@@ -32,7 +32,7 @@ class EncoderXOR {
         var decryptedText = ""
         var keyItr = 0
         for (i in 0 until hexToPairs.length) {
-            val temp = hexToPairs[i]
+            val temp = hexToPairs[i].toInt() xor key[keyItr].toInt()
             decryptedText += temp.toChar()
             keyItr++
             if (keyItr >= key.length) {
@@ -50,7 +50,7 @@ class EncoderXOR {
         var keyItr = 0
         for (i in 0 until msg.length) {
             //Разделяем сетку по нескольким парам(xor операция)
-            val temp = msg[i] xor key[keyItr]
+            val temp = msg[i].toInt() xor key[keyItr].toInt()
             encryptedText += String.format("%02x", temp.toByte())
             keyItr++
             if (keyItr >= key.length) {
