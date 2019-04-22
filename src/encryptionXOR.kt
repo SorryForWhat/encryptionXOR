@@ -1,23 +1,34 @@
-import java.util.Scanner
+//Итак, основная идея алгоритма состоит в том, что если у нас есть некая величина,
+//есть некий шифровальный ключ (другая величина), то можно зашифровать исходные данные через этот ключ
+//применив операцию XOR побитно. Т.е. если у нас есть исходная фраза a и ключ k, то x = a ^ k.
+//Теперь, если к шифру x опять применить ключ, то получим исходную фразу, т.е. a` = x ^ k, где a` = a
+/**
+ * Вариант 2 -- шифрация Шифрация (-c) или дешифрация (-d) указанного (в аргументе командной строки) файла.
+ * Выходной файл указывается как -o filename.txt, по умолчанию имя формируется из имени входного файла
+ * с добавлением расширения. Алгоритм шифрации XOR. Ключ указывается после -c или -d в шестнадцатеричной системе,
+ * длина ключа -- любое целое количество байт.
 
-private var inputText: Scanner? = null
+Command Line: ciphxor [-c key] [-d key] inputname.txt [-o outputname.txt]
+
+Кроме самой программы, следует написать автоматические тесты к ней.
+ */
+
+
 class EncoderXOR {
     fun decryption() {
         print("Enter message: ")
-        val msg = inputText!!.nextLine()
+        val msg = readLine()!!
         print("Enter key: ")
-        val key = inputText!!.nextLine()
+        val key = readLine()!!
         var hexToPairs = ""
-        run {
             var i = 0
             while (i < msg.length - 1) {
-                //Разделяем по сетку по нескольким парам(xor операция)
+                //Разделяем по нескольким парам(xor операция)
                 val output = msg.substring(i, i + 2)
-                val decimal = Integer.parseInt(output, 16)
+                val decimal = output.toInt(16)
                 hexToPairs += decimal.toChar()
                 i += 2
             }
-        }
         var decryptedText = ""
         var keyItr = 0
         for (i in 0 until hexToPairs.length) {
@@ -27,48 +38,40 @@ class EncoderXOR {
             if (keyItr >= key.length) {
                 keyItr = 0
             }
-
         }
-
         println("Decrypted Text: $decryptedText")
     }
-
     fun encryption() {
         print("Enter message: ")
-        val msg = inputText!!.nextLine()
+        val msg = readLine()!!
         print("Enter key: ")
-        val key = inputText!!.nextLine()
+        val key = readLine()!!
         var encryptedText = ""
         var keyItr = 0
         for (i in 0 until msg.length) {
-            //Разделяем по сетку по нескольким парам(xor операция)
-            val temp = msg[i]
+            //Разделяем сетку по нескольким парам(xor операция)
+            val temp = msg[i] xor key[keyItr]
             encryptedText += String.format("%02x", temp.toByte())
             keyItr++
             if (keyItr >= key.length) {
                 keyItr = 0
             }
-
         }
         println("Encrypted Text: $encryptedText")
     }
 }
 fun main(args: Array<String>) {
-        inputText = Scanner(System.`in`)
-        print("Choose Operation(1,2):\n1. Encryption\n2. Decryption\n ")
-        val choice = inputText!!.nextInt()
-        inputText!!.nextLine()
-
+    print("Choose Operation(-c,-d):\n-c. Encryption\n-d. Decryption\n ")
+    val choice = readLine()!!
     when (choice) {
-        1 -> {
+        "-c" -> {
             println("===Encryption===")
             EncoderXOR().encryption()
         }
-        2 -> {
+        "-d" -> {
             println("===Decryption===")
             EncoderXOR().decryption()
         }
         else -> println("Invalid Choice")
     }
-    }
-
+}
